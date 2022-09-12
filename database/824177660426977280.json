@@ -1,0 +1,223 @@
+{
+  "logChannel": "998370040770482336",
+  "activeMod": {},
+  "currentModCount": 25,
+  "modLog": {
+    "836538038255353906": {
+      "1": {
+        "date": 1658070732605,
+        "action": "Mute",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "2": {
+        "date": 1658071073051,
+        "action": "Mute",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "3": {
+        "date": 1658071792844,
+        "action": "Mute",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "another test"
+      },
+      "4": {
+        "date": 1658071940622,
+        "action": "Mute",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "5": {
+        "date": 1658072160720,
+        "action": "Mute",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "6": {
+        "date": 1658072223091,
+        "action": "Mute",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "7": {
+        "date": 1658072342572,
+        "action": "Mute",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "8": {
+        "date": 1658072396301,
+        "action": "Mute",
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "9": {
+        "date": 1658072461018,
+        "action": "Mute",
+        "length": 3600,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "10": {
+        "date": 1658074284544,
+        "action": "Ban",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "somethign reason\n"
+      },
+      "11": {
+        "date": 1658077176257,
+        "action": "Mute",
+        "length": 1658077236,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "12": {
+        "date": 1658077281318,
+        "action": "Mute",
+        "length": 1658077881,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "13": {
+        "date": 1658077332165,
+        "action": "Mute",
+        "length": 3599,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "test"
+      },
+      "14": {
+        "date": 1658077642674,
+        "action": "Mute",
+        "length": 3601,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": null
+      },
+      "15": {
+        "date": 1658078926294,
+        "action": "Mute",
+        "length": 7200,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "Test"
+      },
+      "16": {
+        "date": 1658081230772,
+        "action": "Mute",
+        "length": 3600,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": null
+      },
+      "17": {
+        "date": 1658081252531,
+        "action": "Mute",
+        "length": 60,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": null
+      },
+      "18": {
+        "date": 1658081529444,
+        "action": "Mute",
+        "length": 59,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": null
+      },
+      "19": {
+        "date": 1658081649097,
+        "action": "Mute",
+        "length": 300,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": null
+      },
+      "20": {
+        "date": 1658095377628,
+        "action": "Mute",
+        "length": 18000,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "duration test"
+      },
+      "21": {
+        "date": 1658149854494,
+        "action": "Kick",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": null
+      },
+      "22": {
+        "date": 1658149989612,
+        "action": "Kick",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "None"
+      },
+      "25": {
+        "date": 1659269399797,
+        "action": "Kick",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "None"
+      }
+    },
+    "998213943942193152": {
+      "23": {
+        "date": 1658153567741,
+        "action": "Mute",
+        "length": 299,
+        "username": "ModBot#0134",
+        "moderator": "836538038255353906",
+        "reason": "None"
+      },
+      "24": {
+        "date": 1658153689859,
+        "action": "Mute",
+        "length": 59,
+        "username": "ModBot#0134",
+        "moderator": "836538038255353906",
+        "reason": "None"
+      }
+    }
+  },
+  "modLogChannel": "998370089684447382",
+  "slowmode": {
+    "824177660426977283": {
+      "active": false,
+      "min": 10,
+      "max": 120
+    },
+    "824607405299073035": {
+      "active": true,
+      "min": 15,
+      "max": 120
+    }
+  }
+}

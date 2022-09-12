@@ -1,0 +1,16 @@
+{
+    "name": "bot",
+    "version": "0.0.1",
+    "description": "Bot made by StevnbaK",
+    "main": "app.js",
+    "author": "StevnbaK",
+    "dependencies": {
+        "@discordjs/rest": "^0.5.0",
+        "adm-zip": "^0.5.9",
+        "discord-api-types": "^0.36.2",
+        "discord.js": "^13.8.1",
+        "fs": "*",
+        "path": "*",
+        "pm2": "^5.2.0"
+    }
+}
