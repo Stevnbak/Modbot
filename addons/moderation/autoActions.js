@@ -1,4 +1,5 @@
 const {StorageManager, Console, ExportManager, CommandManager, ChatResponder, Client, BotListeners} = Bot;
+const {AuditLogEvent} = require('discord.js');
 const modFunctions = require('./functions');
 const modActions = require('./actions');
 //Check if action has ran out of time
@@ -23,7 +24,7 @@ BotListeners.on('guildMemberRemove', async function (/** @type {import('discord.
     //Filter out normal leaves
     const fetchedLogs = await member.guild.fetchAuditLogs({
         limit: 1,
-        type: 'MEMBER_KICK',
+        type: AuditLogEvent.MemberKick,
     });
     const kickLog = fetchedLogs.entries.first();
     if (!kickLog) return;
@@ -42,7 +43,7 @@ BotListeners.on('guildMemberRemove', async function (/** @type {import('discord.
 BotListeners.on('guildBanAdd', async function (/** @type {import('discord.js').GuildBan} */ ban) {
     const fetchedLogs = await ban.guild.fetchAuditLogs({
         limit: 1,
-        type: 'MEMBER_BAN',
+        type: AuditLogEvent.MemberBanAdd,
     });
     const banLog = fetchedLogs.entries.first();
     if (!banLog) return;
@@ -58,7 +59,7 @@ BotListeners.on('guildBanAdd', async function (/** @type {import('discord.js').G
 BotListeners.on('guildBanRemove', async function (/** @type {import('discord.js').GuildBan} */ ban) {
     const fetchedLogs = await ban.guild.fetchAuditLogs({
         limit: 1,
-        type: 'MEMBER_UNBAN',
+        type: AuditLogEvent.MemberBanRemove,
     });
     const banLog = fetchedLogs.entries.first();
     if (!banLog) return;
@@ -74,7 +75,7 @@ BotListeners.on('guildBanRemove', async function (/** @type {import('discord.js'
 BotListeners.on('guildMemberUpdate', async function (/** @type {import('discord.js').GuildBan} */ action) {
     const fetchedLogs = await action.guild.fetchAuditLogs({
         limit: 1,
-        type: 'MEMBER_UPDATE',
+        type: AuditLogEvent.MemberUpdate,
     });
     const actionLog = fetchedLogs.entries.first();
     if (!actionLog) return;

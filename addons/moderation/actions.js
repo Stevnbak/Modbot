@@ -1,5 +1,5 @@
 const {StorageManager, Console, ExportManager, CommandManager, ChatResponder, Client, BotListeners} = Bot;
-const {MessageEmbed} = require('discord.js');
+const {EmbedBuilder} = require('discord.js');
 const modFunctions = require('./functions');
 
 //Exports
@@ -25,7 +25,7 @@ async function modLog(type, /** @type {Discord.User} */ user, /** @type {Discord
     if (length != -1) logMessage += ` for ${length}`;
     Console.log(logMessage, guild.id);
     //Channel stuff
-    if (tempChannel) tempChannel.send({embeds: [new MessageEmbed().setColor(CommandManager.neutralColor).setDescription(`${type} of ${user.tag} successful`)]});
+    if (tempChannel) tempChannel.send({embeds: [new EmbedBuilder().setColor(CommandManager.neutralColor).setDescription(`${type} of ${user.tag} successful`)]});
     var channelId = StorageManager.get('modLogChannel', guild.id);
     if (!channelId) {
         Console.log(`No log channel set, and temp channel is null`, guild.id);
@@ -33,7 +33,7 @@ async function modLog(type, /** @type {Discord.User} */ user, /** @type {Discord
     }
     let channel = guild.channels.cache.get(channelId);
     //Log
-    var logEmbed = new MessageEmbed()
+    var logEmbed = new EmbedBuilder()
         .setColor(CommandManager.successColor)
         .setAuthor({name: `Case ${caseId} | ${type} | ${user.tag}`, iconURL: user.avatarURL()})
         .setFields([
@@ -60,7 +60,7 @@ async function modLog(type, /** @type {Discord.User} */ user, /** @type {Discord
             },
         ]);
     //Dm user
-    var dmEmbed = new MessageEmbed().setColor(CommandManager.failColor).setTitle(`You have been ${typeMsg} ${guild.name}`).setTimestamp(new Date());
+    var dmEmbed = new EmbedBuilder().setColor(CommandManager.failColor).setTitle(`You have been ${typeMsg} ${guild.name}`).setTimestamp(new Date());
     if (length != -1)
         dmEmbed.addFields([
             {
@@ -74,17 +74,17 @@ async function modLog(type, /** @type {Discord.User} */ user, /** @type {Discord
                 inline: true,
             },
         ]);
-    else dmEmbed.addField('Reason', `${reason}`, false);
+    else dmEmbed.addFields(['Reason', `${reason}`, false]);
     await user
         .send({embeds: [dmEmbed]})
         .then(() => {
-            logEmbed.addField('DM Status', 'Succesful', true);
+            logEmbed.addFields(['DM Status', 'Succesful', true]);
         })
         .catch(() => {
-            logEmbed.addField('DM Status', 'Failed', true);
+            logEmbed.addFields(['DM Status', 'Failed', true]);
         });
     //Rest of log
-    logEmbed.addField('Reason', `${reason}`, true);
+    logEmbed.addFields(['Reason', `${reason}`, true]);
     channel.send({embeds: [logEmbed]});
 }
 //Save mod action
@@ -146,7 +146,7 @@ async function doUndoAction(type, userId, username, moderator, reason, tempChann
     var logMessage = `${username} was ${typeMsg} ${guild.name} by ${moderator.username} with the reason "${reason}"`;
     Console.log(logMessage, guild.id);
     //Channel stuff
-    if (tempChannel) tempChannel.send({embeds: [new MessageEmbed().setColor(CommandManager.neutralColor).setDescription(`${type} of ${user.tag} successful`)]});
+    if (tempChannel) tempChannel.send({embeds: [new EmbedBuilder().setColor(CommandManager.neutralColor).setDescription(`${type} of ${user.tag} successful`)]});
     var channelId = StorageManager.get('modLogChannel', guild.id);
     if (!channelId) {
         Console.log(`No log channel set, and temp channel is null`, guild.id);
@@ -154,7 +154,7 @@ async function doUndoAction(type, userId, username, moderator, reason, tempChann
     }
     let channel = guild.channels.cache.get(channelId);
     //Log
-    var logEmbed = new MessageEmbed()
+    var logEmbed = new EmbedBuilder()
         .setColor(CommandManager.successColor)
         .setAuthor({name: `Un${type.toLowerCase()} | ${username}`})
         .setFields([

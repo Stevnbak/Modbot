@@ -1,11 +1,11 @@
 const {StorageManager, Console, ExportManager, CommandManager, ChatResponder, Client, BotListeners} = Bot;
-const {MessageEmbed} = require('discord.js');
+const {EmbedBuilder} = require('discord.js');
 const modFunctions = require('./functions');
 const modActions = require('./actions');
 //Kick
 CommandManager.add('kick', {description: 'Kick member', category: 'Moderation', mod: true}, (/** @type {import('discord.js').Message} */ message, content) => {
     if (content == '') {
-        var msgEmbed = new MessageEmbed()
+        var msgEmbed = new EmbedBuilder()
             .setColor(CommandManager.neutralColor)
             .setTitle(`Kick member`)
             .setDescription('Use the command `' + CommandManager.prefix + 'kick [userId] [reason]` to kick a member');
@@ -23,13 +23,13 @@ CommandManager.add('kick', {description: 'Kick member', category: 'Moderation', 
             modActions.modLog('Kick', actionUser.user, modUser.user, reason, message.guild, message.channel);
         })
         .catch(() => {
-            message.channel.send({embeds: [new MessageEmbed().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
+            message.channel.send({embeds: [new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
         });
 });
 //Ban
 CommandManager.add('ban', {description: 'Ban member', category: 'Moderation', mod: true}, (/** @type {import('discord.js').Message} */ message, content) => {
     if (content == '') {
-        var msgEmbed = new MessageEmbed()
+        var msgEmbed = new EmbedBuilder()
             .setColor(CommandManager.neutralColor)
             .setTitle(`Ban member`)
             .setDescription('Use the command `' + CommandManager.prefix + 'ban [userId] [length?] [reason]` to ban a member');
@@ -50,13 +50,13 @@ CommandManager.add('ban', {description: 'Ban member', category: 'Moderation', mo
             modActions.modLog('Ban', actionUser.user, modUser.user, reason, message.guild, message.channel, true, length);
         })
         .catch(() => {
-            message.channel.send({embeds: [new MessageEmbed().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
+            message.channel.send({embeds: [new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
         });
 });
 //Mute/Timeout
 CommandManager.add('mute', {description: 'Mute member', category: 'Moderation', mod: true}, (/** @type {import('discord.js').Message} */ message, content) => {
     if (content == '') {
-        var msgEmbed = new MessageEmbed()
+        var msgEmbed = new EmbedBuilder()
             .setColor(CommandManager.neutralColor)
             .setTitle(`Mute member`)
             .setDescription('Use the command `' + CommandManager.prefix + 'mute [userId] [length?] [reason]` to timeout a member for the specified amount of time \n If no length has been set, the timeout will default to 1 hour');
@@ -78,13 +78,13 @@ CommandManager.add('mute', {description: 'Mute member', category: 'Moderation', 
             modActions.modLog('Mute', actionUser.user, modUser.user, reason, message.guild, message.channel, true, length);
         })
         .catch(() => {
-            message.channel.send({embeds: [new MessageEmbed().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
+            message.channel.send({embeds: [new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
         });
 });
 //Warn
 CommandManager.add('warn', {description: 'Warn member', category: 'Moderation', mod: true}, (/** @type {import('discord.js').Message} */ message, content) => {
     if (content == '') {
-        var msgEmbed = new MessageEmbed()
+        var msgEmbed = new EmbedBuilder()
             .setColor(CommandManager.neutralColor)
             .setTitle(`Warn member`)
             .setDescription('Use the command `' + CommandManager.prefix + 'warn [userId] [reason]` to warn a member');
@@ -102,13 +102,13 @@ CommandManager.add('warn', {description: 'Warn member', category: 'Moderation', 
             modActions.modLog('Warn', actionUser.user, modUser.user, reason, message.guild, message.channel);
         })
         .catch(() => {
-            message.channel.send({embeds: [new MessageEmbed().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
+            message.channel.send({embeds: [new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
         });
 });
 //Unban
 CommandManager.add('unban', {description: 'Unban member', category: 'Moderation', mod: true}, (/** @type {import('discord.js').Message} */ message, content) => {
     if (content == '') {
-        var msgEmbed = new MessageEmbed()
+        var msgEmbed = new EmbedBuilder()
             .setColor(CommandManager.neutralColor)
             .setTitle(`Unban member`)
             .setDescription('Use the command `' + CommandManager.prefix + 'unban [userId] [reason]` to remove a ban on a user');
@@ -127,13 +127,13 @@ CommandManager.add('unban', {description: 'Unban member', category: 'Moderation'
             modActions.doUndoAction('Ban', ban.user.id, ban.user.tag, modUser.user, reason, message.channel, message.guild);
         })
         .catch(() => {
-            message.channel.send({embeds: [new MessageEmbed().setColor(CommandManager.failColor).setDescription(`No ban for user with id: '${params[0]}' could be found`)]});
+            message.channel.send({embeds: [new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`No ban for user with id: '${params[0]}' could be found`)]});
         });
 });
 //Unmute
 CommandManager.add('unmute', {description: 'Unmute member', category: 'Moderation', mod: true}, (/** @type {import('discord.js').Message} */ message, content) => {
     if (content == '') {
-        var msgEmbed = new MessageEmbed()
+        var msgEmbed = new EmbedBuilder()
             .setColor(CommandManager.neutralColor)
             .setTitle(`Unmute member`)
             .setDescription('Use the command `' + CommandManager.prefix + 'unmute [userId] [reason]` to remove a timeout on a user');
@@ -152,13 +152,13 @@ CommandManager.add('unmute', {description: 'Unmute member', category: 'Moderatio
             modActions.doUndoAction('Mute', actionUser.id, actionUser.user.tag, modUser.user, reason, message.channel, message.guild);
         })
         .catch(() => {
-            message.channel.send({embeds: [new MessageEmbed().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
+            message.channel.send({embeds: [new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`User with id: '${params[0]}' could not be found`)]});
         });
 });
 //Duration
 CommandManager.add('duration', {description: 'Change duration of a mute or ban', category: 'Moderation', mod: true}, async (/** @type {import('discord.js').Message} */ message, content) => {
     if (content == '') {
-        var msgEmbed = new MessageEmbed()
+        var msgEmbed = new EmbedBuilder()
             .setColor(CommandManager.neutralColor)
             .setTitle(`Change duration`)
             .setDescription('Use the command `' + CommandManager.prefix + 'duration [caseId] [new length]` to change the length of a timeout or a ban');
@@ -197,8 +197,8 @@ CommandManager.add('duration', {description: 'Change duration of a mute or ban',
     if (!StorageManager.get('modLogChannel', message.guild.id)) var channelId = message.channel.id;
     else var channelId = StorageManager.get('modLogChannel', message.guild.id);
     let channel = message.guild.channels.cache.get(channelId);
-    message.channel.send({embeds: [new MessageEmbed().setColor(CommandManager.neutralColor).setDescription(`Duration for case ${caseId}, ${action['action']} of ${action['username']}, changed to ${modFunctions.lengthToString(newLength)}`)]});
-    var logEmbed = new MessageEmbed()
+    message.channel.send({embeds: [new EmbedBuilder().setColor(CommandManager.neutralColor).setDescription(`Duration for case ${caseId}, ${action['action']} of ${action['username']}, changed to ${modFunctions.lengthToString(newLength)}`)]});
+    var logEmbed = new EmbedBuilder()
         .setColor(CommandManager.successColor)
         .setTitle(`Duration for case ${caseId} changed to ${modFunctions.lengthToString(newLength)}`)
         .setFields([
@@ -215,7 +215,7 @@ CommandManager.add('duration', {description: 'Change duration of a mute or ban',
         ])
         .setTimestamp(new Date());
     //Dm user
-    var dmEmbed = new MessageEmbed()
+    var dmEmbed = new EmbedBuilder()
         .setColor(CommandManager.failColor)
         .setTitle(`The duration of your ${action['action']} in ${message.guild.name} was changed to ${modFunctions.lengthToString(newLength)}`)
         .setTimestamp(new Date());
@@ -238,7 +238,7 @@ CommandManager.add('modlogs', {description: 'Show modlogs for member', category:
     var userId = content;
     var currentLogs = modlogs[userId];
     if (currentLogs) {
-        var msgEmbed = new MessageEmbed()
+        var msgEmbed = new EmbedBuilder()
             .setColor(CommandManager.successColor)
             .setAuthor({name: `Modlogs for ${currentLogs[Object.keys(currentLogs)[0]]['username']}`})
             .setFooter({text: `Total logs: ${Object.keys(currentLogs).length}`});
@@ -260,7 +260,7 @@ Date: <t:${Math.round(current['date'] / 1000)}>`
         message.channel.send({embeds: [msgEmbed]});
         Console.log(`Showed modlogs for ${current['username']}`, message.guild.id);
     } else {
-        var msgEmbed = new MessageEmbed().setColor(CommandManager.failColor).setDescription(`No modlogs found for <@${userId}>`);
+        var msgEmbed = new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`No modlogs found for <@${userId}>`);
         message.channel.send({embeds: [msgEmbed]});
         Console.log(`Couldn't find modlogs for ${userId}`, message.guild.id);
     }
@@ -269,7 +269,7 @@ Date: <t:${Math.round(current['date'] / 1000)}>`
 //Active moderations
 CommandManager.add('moderations', {description: 'Show all active moderations', category: 'Moderation', mod: true}, (/** @type {import('discord.js').Message} */ message, content) => {
     var active = StorageManager.get('activeMod', message.guild.id) ? StorageManager.get('activeMod', message.guild.id) : {};
-    var msgEmbed = new MessageEmbed()
+    var msgEmbed = new EmbedBuilder()
         .setColor(CommandManager.successColor)
         .setAuthor({name: `Active moderations`})
         .setFooter({text: `Amount of active moderations: ${Object.keys(active).length}`});
@@ -291,9 +291,9 @@ CommandManager.add('whois', {description: 'Show user information about user', ca
             member.roles.cache.forEach((role) => {
                 if (role.name != '@everyone') roles.push(role);
             });
-            var roleString = `${roles.join(' ')}`;
+            var roleString = `${roles.join(' ')} `;
             if (roles.length == 0) roleString = 'None';
-            var msgEmbed = new MessageEmbed()
+            var msgEmbed = new EmbedBuilder()
                 .setColor(CommandManager.neutralColor)
                 .setThumbnail(member.user.avatarURL())
                 .setAuthor({name: `${member.user.tag}`, iconURL: member.user.avatarURL()})
@@ -301,21 +301,21 @@ CommandManager.add('whois', {description: 'Show user information about user', ca
                 .setFooter({text: `User id: ${member.id}`})
                 .setTimestamp()
                 .addFields([
-                    {name: 'Joined', value: `<t:${Math.round(member.joinedTimestamp / 1000)}>`, inline: true},
-                    {name: 'Registered', value: `<t:${Math.round(member.user.createdTimestamp / 1000)}>`, inline: true},
+                    {name: 'Joined', value: `<t:${Math.round(member.joinedTimestamp / 1000)}> `, inline: true},
+                    {name: 'Registered', value: `<t:${Math.round(member.user.createdTimestamp / 1000)}> `, inline: true},
                     {name: 'Roles', value: roleString},
                 ]);
             message.channel.send({embeds: [msgEmbed]});
             Console.log(`Showed user information for ${member.user.tag}`, message.guild.id);
         })
         .catch(() => {
-            var msgEmbed = new MessageEmbed().setColor(CommandManager.failColor).setDescription(`Couldn't find user with id ${userId}`);
+            var msgEmbed = new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`Couldn't find user with id ${userId}`);
             message.channel.send({embeds: [msgEmbed]});
             Console.log(`Couldn't find user with id: "${userId}"`, message.guild.id);
         });
     message.delete().catch(() => {});
 });
-//Modlog
+//Mod statistics
 CommandManager.add('modstats', {description: 'Show modlogs for member', category: 'Moderation', mod: true}, (/** @type {import('discord.js').Message} */ message) => {
     var modlogs = StorageManager.get('modLog', message.guild.id) ? StorageManager.get('modLog', message.guild.id) : {};
     var userId = content;
@@ -343,7 +343,7 @@ CommandManager.add('modstats', {description: 'Show modlogs for member', category
             else if (type == 'Ban') bans += 1;
             if (date >= Date.now() - 7 * 24 * 60 * 60 * 1000) recent += 1;
         }
-        var msgEmbed = new MessageEmbed()
+        var msgEmbed = new EmbedBuilder()
             .setColor(CommandManager.neutralColor)
             .setDescription(`Modstats for <@${userId}>`)
             .setFields([
@@ -356,7 +356,7 @@ CommandManager.add('modstats', {description: 'Show modlogs for member', category
         message.channel.send({embeds: [msgEmbed]});
         Console.log(`Showed modstats for user with id: ${userId}`, message.guild.id);
     } else {
-        var msgEmbed = new MessageEmbed().setColor(CommandManager.failColor).setDescription(`No modlogs found for <@${userId}>`);
+        var msgEmbed = new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`No modlogs found for <@${userId}>`);
         message.channel.send({embeds: [msgEmbed]});
         Console.log(`No mod actions made by user with id: ${userId}`, message.guild.id);
     }

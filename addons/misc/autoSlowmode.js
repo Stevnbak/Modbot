@@ -1,5 +1,5 @@
 const {StorageManager, Console, ExportManager, CommandManager, ChatResponder, Client, BotListeners} = Bot;
-const {MessageEmbed} = require('discord.js');
+const {EmbedBuilder} = require('discord.js');
 const scale = 200;
 var msgPerMinute = {};
 //{channelId:{active: true, max: 300, min: 15}}

@@ -1,5 +1,5 @@
 namespace Bot {
-    import {Client, Message, MessageEmbed, Channel, TextChannel, User, StringResolvable, Snowflake, MessageOptions, Attachment, MessageReaction, Emoji, UserResolvable, OAuth2Application, GuildMember} from 'discord.js';
+    import {Client, Message, EmbedBuilder, Channel, TextChannel, User, StringResolvable, Snowflake, MessageOptions, Attachment, MessageReaction, Emoji, UserResolvable, OAuth2Application, GuildMember} from 'discord.js';
 
     // Shortcut type, since it's used a lot.
     export type Message = Message;

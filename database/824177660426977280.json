@@ -1,7 +1,7 @@
 {
   "logChannel": "998370040770482336",
   "activeMod": {},
-  "currentModCount": 25,
+  "currentModCount": 26,
   "modLog": {
     "836538038255353906": {
       "1": {
@@ -186,6 +186,14 @@
         "username": "Stevee#7680",
         "moderator": "307900989455859723",
         "reason": "None"
+      },
+      "26": {
+        "date": 1666194390547,
+        "action": "Kick",
+        "length": -1,
+        "username": "Stevee#7680",
+        "moderator": "307900989455859723",
+        "reason": "Testing"
       }
     },
     "998213943942193152": {

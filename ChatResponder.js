@@ -1,5 +1,5 @@
 //@ts-check
-const {MessageEmbed, Permissions} = require('discord.js');
+const {EmbedBuilder, PermissionsBitField, ChannelType} = require('discord.js');
 /**
  * @typedef {"Uncategorized Commands"|"Misc"} ChatCategory
  *
@@ -57,7 +57,7 @@ class ChatResponder {
         //Activate text commands.
         on('messageCreate', async (msg) => {
             //Filter out dms and other bots...
-            if (msg.channel.type === 'DM' || msg.author.bot) return;
+            if (msg.channel.type === ChannelType.DM || msg.author.bot || msg.guild == null) return;
             const content = msg.content.toLowerCase();
             for (const command of this.responders) {
                 if (content.includes(command.word)) {
@@ -77,7 +77,7 @@ class ChatResponder {
                                 Console.error('=====');
                                 try {
                                     await msg.channel.send({
-                                        embeds: [new MessageEmbed().setDescription('An error has occurred while running this command! It has been reported to the developer!').setColor(0xff0000)],
+                                        embeds: [new EmbedBuilder().setDescription('An error has occurred while running this command! It has been reported to the developer!').setColor(0xff0000)],
                                     });
                                 } catch (_) {}
                             }
@@ -90,18 +90,19 @@ class ChatResponder {
         Console.log('Chatresponder is ready', null);
     }
 }
-function checkBotPermissions(channel, /** @type {import('discord.js').Guild} */ guild) {
+async function checkBotPermissions(channel, /** @type {import('discord.js').Guild} */ guild) {
     var neededPermissions = [
-        Permissions.FLAGS.VIEW_AUDIT_LOG,
-        Permissions.FLAGS.VIEW_CHANNEL,
-        Permissions.FLAGS.SEND_MESSAGES,
-        Permissions.FLAGS.SEND_MESSAGES_IN_THREADS,
-        Permissions.FLAGS.EMBED_LINKS,
-        Permissions.FLAGS.ATTACH_FILES,
-        Permissions.FLAGS.READ_MESSAGE_HISTORY,
-        Permissions.FLAGS.ADD_REACTIONS,
+        PermissionsBitField.Flags.ViewAuditLog,
+        PermissionsBitField.Flags.ViewChannel,
+        PermissionsBitField.Flags.SendMessages,
+        PermissionsBitField.Flags.SendMessagesInThreads,
+        PermissionsBitField.Flags.EmbedLinks,
+        PermissionsBitField.Flags.AttachFiles,
+        PermissionsBitField.Flags.ReadMessageHistory,
+        PermissionsBitField.Flags.AddReactions,
     ];
-    if (guild.me.permissionsIn(channel).has(neededPermissions)) return true;
+    let me = await guild.members.fetch(guild.client.user.id);
+    if (me.permissionsIn(channel).has(neededPermissions)) return true;
     return false;
 }
 module.exports = ChatResponder;

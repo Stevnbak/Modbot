@@ -1,7 +1,8 @@
 //Node modules required:
-const Discord = require('discord.js'); //Requiring modules.
-const fs = require('fs'); //Requiring native module.
-const path = require('path'); //Requiring native module.
+const Discord = require('discord.js');
+const {GatewayIntentBits} = require('discord.js');
+const fs = require('fs');
+const path = require('path');
 
 //Managers required:
 const SM = require('./StorageManager');
@@ -15,28 +16,12 @@ const C = require('./Console');
 const CONFIG = require('./config.json');
 
 //Getting the bot token.
-const TOKEN = CONFIG.TOKEN;
+const TOKEN = CONFIG.TESTTOKEN;
 
 //Creating the client.
 const Client = new Discord.Client({
     disabledEvents: ['TYPING_START', 'TYPING_STOP', 'CHANNEL_PINS_UPDATE', 'USER_SETTINGS_UPDATE'],
-    intents: [
-        'GUILDS',
-        'GUILD_MEMBERS',
-        'GUILD_BANS',
-        'GUILD_EMOJIS_AND_STICKERS',
-        'GUILD_INTEGRATIONS',
-        'GUILD_WEBHOOKS',
-        'GUILD_INVITES',
-        'GUILD_VOICE_STATES',
-        'GUILD_PRESENCES',
-        'GUILD_MESSAGES',
-        'GUILD_MESSAGE_REACTIONS',
-        'GUILD_MESSAGE_TYPING',
-        'DIRECT_MESSAGES',
-        'DIRECT_MESSAGE_REACTIONS',
-        'DIRECT_MESSAGE_TYPING',
-    ],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers],
 });
 
 const Console = new C(Client);

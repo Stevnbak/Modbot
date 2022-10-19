@@ -1,5 +1,5 @@
 //@ts-check
-const {MessageEmbed, Permissions} = require('discord.js');
+const {EmbedBuilder, PermissionsBitField, ChannelType} = require('discord.js');
 /**
  * @typedef {"Uncategorized Commands"|"Misc"|"Botowner Commands"|"Moderation"|"Information"} CommandCategory
  *
@@ -85,7 +85,7 @@ class CommandManager {
         //Activate text commands.
         on('messageCreate', async (msg) => {
             //Filter out dms, other bots and no prefix...
-            if (msg.channel.type === 'DM' || !msg.content.startsWith(this.prefix) || msg.author.bot) return;
+            if (msg.channel.type === ChannelType.DM || !msg.content.startsWith(this.prefix) || msg.author.bot || msg.guild == null) return;
             const cmd = msg.content.split(' ')[0].slice(this.prefix.length).toLowerCase();
             for (const command of this.commands) {
                 if (command.cmd.startsWith(cmd)) {
@@ -113,7 +113,7 @@ class CommandManager {
                                 Console.error(error.stack);
                                 try {
                                     await msg.channel.send({
-                                        embeds: [new MessageEmbed().setDescription('An error has occurred while running this command! It has been reported to the developer!').setColor(0xff0000)],
+                                        embeds: [new EmbedBuilder().setDescription('An error has occurred while running this command! It has been reported to the developer!').setColor(0xff0000)],
                                     });
                                 } catch (_) {}
                             }
@@ -137,25 +137,26 @@ function checkModStatus(member, guild, Storage) {
 }
 
 function checkAdminStatus(member, guild) {
-    if (member.permissions.has(Permissions.FLAGS.ADMINISTRATOR, true)) return true;
+    if (member.permissions.has(PermissionsBitField.Flags.Administrator, true)) return true;
     return false;
 }
 
-function checkBotPermissions(channel, guild, mod) {
+async function checkBotPermissions(channel, /** @type {import('discord.js').Guild} */ guild, mod) {
     var neededPermissions = [
-        Permissions.FLAGS.VIEW_AUDIT_LOG,
-        Permissions.FLAGS.VIEW_CHANNEL,
-        Permissions.FLAGS.SEND_MESSAGES,
-        Permissions.FLAGS.SEND_MESSAGES_IN_THREADS,
-        Permissions.FLAGS.EMBED_LINKS,
-        Permissions.FLAGS.ATTACH_FILES,
-        Permissions.FLAGS.READ_MESSAGE_HISTORY,
-        Permissions.FLAGS.ADD_REACTIONS,
+        PermissionsBitField.Flags.ViewAuditLog,
+        PermissionsBitField.Flags.ViewChannel,
+        PermissionsBitField.Flags.SendMessages,
+        PermissionsBitField.Flags.SendMessagesInThreads,
+        PermissionsBitField.Flags.EmbedLinks,
+        PermissionsBitField.Flags.AttachFiles,
+        PermissionsBitField.Flags.ReadMessageHistory,
+        PermissionsBitField.Flags.AddReactions,
     ];
     if (mod) {
-        neededPermissions.concat([Permissions.FLAGS.MANAGE_CHANNELS, Permissions.FLAGS.BAN_MEMBERS, Permissions.FLAGS.KICK_MEMBERS, Permissions.FLAGS.MODERATE_MEMBERS]);
+        neededPermissions.concat([PermissionsBitField.Flags.ManageChannels, PermissionsBitField.Flags.BanMembers, PermissionsBitField.Flags.KickMembers, PermissionsBitField.Flags.ModerateMembers]);
     }
-    if (guild.me.permissionsIn(channel).has(neededPermissions)) return true;
+    let me = await guild.members.fetch(guild.client.user.id);
+    if (me.permissionsIn(channel).has(neededPermissions)) return true;
     return false;
 }
 
