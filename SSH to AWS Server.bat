@@ -1,1 +1,0 @@
-ssh -i "C:\Users\kaspe\AWS Stuff\VPS Keypair.pem" ubuntu@ec2-44-201-82-183.compute-1.amazonaws.com
