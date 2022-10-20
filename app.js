@@ -1,6 +1,6 @@
 //Node modules required:
 const Discord = require('discord.js');
-const {GatewayIntentBits} = require('discord.js');
+const {GatewayIntentBits, Partials} = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -22,6 +22,7 @@ const TOKEN = CONFIG.TESTTOKEN;
 const Client = new Discord.Client({
     disabledEvents: ['TYPING_START', 'TYPING_STOP', 'CHANNEL_PINS_UPDATE', 'USER_SETTINGS_UPDATE'],
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildIntegrations],
+    partials: [Partials.User, Partials.GuildMember, Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
 const Console = new C(Client);

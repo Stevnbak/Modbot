@@ -1,7 +1,8 @@
 const {StorageManager, Console, ExportManager, CommandManager, ChatResponder, Client, BotListeners} = Bot;
-const {EmbedBuilder, AuditLogEvent} = require('discord.js');
+const {EmbedBuilder, AuditLogEvent, Events} = require('discord.js');
+
 //Log message edit
-BotListeners.on('messageUpdate', async (/** @type {import('discord.js').Message} */ oldMessage) => {
+BotListeners.on(Events.MessageUpdate, async (/** @type {import('discord.js').Message} */ oldMessage) => {
     var newMessage = await oldMessage.channel.messages.fetch(oldMessage.id);
     var msgEmbed = new EmbedBuilder()
         .setAuthor({name: `${oldMessage.author.tag}`, iconURL: oldMessage.author.avatarURL()})
@@ -19,17 +20,21 @@ BotListeners.on('messageUpdate', async (/** @type {import('discord.js').Message}
     if (channel) channel.send({embeds: [msgEmbed]}).catch(Console.error);
 });
 //Log message delete
-BotListeners.on('messageDelete', async (message) => {
+BotListeners.on(Events.MessageDelete, async (/** @type {import('discord.js').Message} */ message) => {
+    if (message.guild == null) return;
+    if (message.author == null) return;
     //Deleted by someone else?
     const fetchedLogs = await message.guild.fetchAuditLogs({
         limit: 1,
         type: AuditLogEvent.MessageDelete,
     });
     const alog = fetchedLogs.entries.first();
-    var deleter;
+    var deleter = message.author;
     if (alog) {
         var {executor, target, createdTimestamp} = alog;
-        if (message.author.id == target.id && Math.round(createdTimestamp / (60 * 1000)) == Math.round(Date.now() / (60 * 1000))) deleter = executor;
+        if (message.author.id == target.id && Math.round(createdTimestamp / (60 * 1000)) == Math.round(Date.now() / (60 * 1000))) {
+            deleter = executor;
+        }
     }
     //Send log message
     var msgEmbed = new EmbedBuilder()
@@ -41,12 +46,12 @@ BotListeners.on('messageDelete', async (message) => {
         .setFooter({text: `User id: ${message.author.id}`})
         .setTimestamp()
         .addFields([{name: 'Content', value: message.content}]);
-    if (deleter) msgEmbed.addFields([{name: 'Deleted by', value: `${deleter}`}]);
+    msgEmbed.addFields([{name: 'Deleted by', value: `${deleter}`}]);
     var channel = await getChannel(message.guild);
     if (channel) channel.send({embeds: [msgEmbed]}).catch(Console.error);
 });
 //Log member join
-BotListeners.on('guildMemberAdd', async (member) => {
+BotListeners.on(Events.GuildMemberAdd, async (/** @type {import('discord.js').GuildMember} */ member) => {
     //Send log message
     var msgEmbed = new EmbedBuilder()
         .setAuthor({name: `Member joined`, iconURL: member.user.avatarURL()})
@@ -58,7 +63,7 @@ BotListeners.on('guildMemberAdd', async (member) => {
     if (channel) channel.send({embeds: [msgEmbed]}).catch(Console.error);
 });
 //Log member leave
-BotListeners.on('guildMemberRemove', async (member) => {
+BotListeners.on(Events.GuildMemberRemove, async (/** @type {import('discord.js').GuildMember} */ member) => {
     //Send log message
     var msgEmbed = new EmbedBuilder()
         .setAuthor({name: `Member left`, iconURL: member.user.avatarURL()})
@@ -70,7 +75,7 @@ BotListeners.on('guildMemberRemove', async (member) => {
     if (channel) channel.send({embeds: [msgEmbed]}).catch(Console.error);
 });
 //Log name change
-BotListeners.on('guildMemberUpdate', async (member) => {
+BotListeners.on(Events.GuildMemberUpdate, async (/** @type {import('discord.js').GuildMember} */ member, /** @type {import('discord.js').GuildMember} */ newMember) => {
     const fetchedLogs = await member.guild.fetchAuditLogs({
         limit: 1,
         type: AuditLogEvent.MemberUpdate,

@@ -76,6 +76,7 @@ class CommandManager {
                 name: cmd,
                 type: data.type,
                 default_member_permissions: data.permissions.toString(),
+                dm_permission: false,
             };
             if (data.options.length > 0) {
                 interaction.options = data.options;
@@ -105,10 +106,10 @@ class CommandManager {
 
         //Activate applications.
         on('interactionCreate', async (interaction) => {
-            //Filter out dms, other bots...
-            if (interaction.guild == null || interaction.user.bot) return;
             //Filter out non slash commands.
             if (!interaction.isChatInputCommand() && !interaction.isUserContextMenuCommand() && !interaction.isMessageContextMenuCommand()) return;
+            //Filter out dms, other bots...
+            if (interaction.guild == null || interaction.user.bot) return;
             //Find command.
             for (const command of this.commands) {
                 if (command.cmd == interaction.commandName) {
