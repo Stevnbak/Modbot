@@ -36,7 +36,7 @@ async function updateSlowmode(channel) {
     var min = msgPerMinute[channel]['min'];
     var max = msgPerMinute[channel]['max'];
     var seconds = min + (max - min) * factor;
-    var slowmode = Math.round(seconds / 10) * 10;
+    var slowmode = Math.round(seconds / 5) * 5;
     //Console.log(slowmode);
     //Change slowmode for the channel
     /** @type {import('discord.js').Guild} */ var guild = await Client.guilds.fetch(msgPerMinute[channel]['guild']).catch(() => {});
