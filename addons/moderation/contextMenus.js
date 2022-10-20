@@ -34,32 +34,36 @@ CommandManager.add('Warn', {category: 'Moderation', description: 'Warn a user', 
     //show modal
     await interaction.showModal(modal);
 });
-CommandManager.add('Who is', {category: 'Moderation', description: 'Get user information', type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.ModerateMembers}, async (interaction) => {
-    const member = interaction.targetMember;
-    var roles = [];
-    member.roles.cache.forEach((role) => {
-        if (role.name != '@everyone') roles.push(role);
-    });
-    var roleString = `${roles.join(' ')} `;
-    if (roles.length == 0) roleString = 'None';
-    var msgEmbed = new EmbedBuilder()
-        .setColor(CommandManager.neutralColor)
-        .setThumbnail(member.user.avatarURL())
-        .setAuthor({name: `${member.user.tag}`, iconURL: member.user.avatarURL()})
-        .setDescription(`${member}`)
-        .setFooter({text: `User id: ${member.id}`})
-        .setTimestamp()
-        .addFields([
-            {name: 'Joined', value: `<t:${Math.round(member.joinedTimestamp / 1000)}> `, inline: true},
-            {name: 'Registered', value: `<t:${Math.round(member.user.createdTimestamp / 1000)}> `, inline: true},
-            {name: 'Roles', value: roleString},
-        ]);
-    interaction.reply({embeds: [msgEmbed], ephemeral: true});
-    Console.log(`Showed user information for ${member.user.tag}`, interaction.guild.id);
-});
+CommandManager.add(
+    'Who is',
+    {category: 'Moderation', description: 'Get user information', type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers},
+    async (interaction) => {
+        const member = interaction.targetMember;
+        var roles = [];
+        member.roles.cache.forEach((role) => {
+            if (role.name != '@everyone') roles.push(role);
+        });
+        var roleString = `${roles.join(' ')} `;
+        if (roles.length == 0) roleString = 'None';
+        var msgEmbed = new EmbedBuilder()
+            .setColor(CommandManager.neutralColor)
+            .setThumbnail(member.user.avatarURL())
+            .setAuthor({name: `${member.user.tag}`, iconURL: member.user.avatarURL()})
+            .setDescription(`${member}`)
+            .setFooter({text: `User id: ${member.id}`})
+            .setTimestamp()
+            .addFields([
+                {name: 'Joined', value: `<t:${Math.round(member.joinedTimestamp / 1000)}> `, inline: true},
+                {name: 'Registered', value: `<t:${Math.round(member.user.createdTimestamp / 1000)}> `, inline: true},
+                {name: 'Roles', value: roleString},
+            ]);
+        interaction.reply({embeds: [msgEmbed], ephemeral: true});
+        Console.log(`Showed user information for ${member.user.tag}`, interaction.guild.id);
+    }
+);
 CommandManager.add(
     'Mod logs',
-    {category: 'Moderation', description: 'Get user information', type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.ModerateMembers},
+    {category: 'Moderation', description: 'Get user information', type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers},
     async (/** @type {import('discord.js').ChatInputCommandInteraction} */ interaction) => {
         var modlogs = StorageManager.get('modLog', interaction.guild.id) ? StorageManager.get('modLog', interaction.guild.id) : {};
         var userId = interaction.targetMember.id;

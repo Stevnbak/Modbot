@@ -12,7 +12,7 @@ CommandManager.add(
             {name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User},
             {name: 'reason', description: 'Reason behind the kick', autocomplete: true, type: ApplicationCommandOptionType.String},
         ],
-        permissions: PermissionsBitField.Flags.KickMembers,
+        permissions: PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers,
         type: ApplicationCommandType.ChatInput,
     },
     (/** @type {import('discord.js').ChatInputCommandInteraction} */ interaction) => {
@@ -186,7 +186,7 @@ CommandManager.add(
             {name: 'case-id', description: 'Case Id of moderation action', required: true, type: ApplicationCommandOptionType.Number},
             {name: 'length', description: 'New length of the mute or ban', required: true, type: ApplicationCommandOptionType.String},
         ],
-        permissions: PermissionsBitField.Flags.ModerateMembers,
+        permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.BanMembers,
         type: ApplicationCommandType.ChatInput,
     },
     async (/** @type {import('discord.js').ChatInputCommandInteraction} */ interaction) => {
@@ -262,7 +262,7 @@ CommandManager.add(
         description: 'Show modlogs for member',
         category: 'Moderation',
         options: [{name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User}],
-        permissions: PermissionsBitField.Flags.ModerateMembers,
+        permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers,
         type: ApplicationCommandType.ChatInput,
     },
     async (/** @type {import('discord.js').ChatInputCommandInteraction} */ interaction) => {
@@ -311,7 +311,7 @@ Date: <t:${Math.round(current['date'] / 1000)}>` + ' ',
 //Active moderations
 CommandManager.add(
     'moderations',
-    {description: 'Show all active moderations', category: 'Moderation', permissions: PermissionsBitField.Flags.ModerateMembers, type: ApplicationCommandType.ChatInput},
+    {description: 'Show all active moderations', category: 'Moderation', permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers, type: ApplicationCommandType.ChatInput},
     (/** @type {import('discord.js').ChatInputCommandInteraction} */ interaction) => {
         var active = StorageManager.get('activeMod', interaction.guild.id) ? StorageManager.get('activeMod', interaction.guild.id) : {};
         var msgEmbed = new EmbedBuilder()
@@ -332,7 +332,7 @@ CommandManager.add(
         description: 'Show user information about user',
         category: 'Moderation',
         options: [{name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User}],
-        permissions: PermissionsBitField.Flags.ModerateMembers,
+        permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers,
         type: ApplicationCommandType.ChatInput,
     },
     (/** @type {import('discord.js').ChatInputCommandInteraction} */ interaction) => {
@@ -375,7 +375,7 @@ CommandManager.add(
         description: 'Show modlogs for member',
         category: 'Moderation',
         options: [{name: 'moderator', description: 'Moderator to look up stats for', type: ApplicationCommandOptionType.User}],
-        permissions: PermissionsBitField.Flags.ModerateMembers,
+        permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers,
         type: ApplicationCommandType.ChatInput,
     },
     (/** @type {import('discord.js').ChatInputCommandInteraction} */ interaction) => {
