@@ -12,9 +12,9 @@ class Console {
         /**
          * Log a string to both the console and the log file.
          * @param {string} text Name of the text to be logged.
-         * @param {string} serverId Id of the server
+         * @param {string | null} serverId Id of the server
          */
-        this.log = (text, serverId) => {
+        this.log = (text, serverId = null) => {
             if (serverId != null) var serverName = Client.guilds.cache.get(serverId).name + '';
             else var serverName = 'Global';
             let consoleText = `[${new Date().toLocaleDateString()}-${new Date().toLocaleTimeString()}] - [${serverName}] > ${text}`;
@@ -27,8 +27,8 @@ class Console {
          * @param {string} error Name of the error to be saved.
          */
         this.error = (error) => {
-            let consoleText = `[ERROR] - [${new Date().toLocaleDateString()}-${new Date().toLocaleTimeString()}] > ${error}`;
-            console.log(consoleText);
+            let consoleText = `[${new Date().toLocaleDateString()}-${new Date().toLocaleTimeString()}] - [ERROR] > ${error}`;
+            console.error(consoleText);
             logger.write(consoleText + '\n');
         };
     }

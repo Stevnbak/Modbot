@@ -15,17 +15,12 @@ async function modLog(type, /** @type {Discord.User} */ user, /** @type {Discord
     var caseId = StorageManager.get('currentModCount', guild.id) ? StorageManager.get('currentModCount', guild.id) + 1 : 1;
     StorageManager.set('currentModCount', caseId, guild.id);
     saveAction(type, user.id, user.tag, moderator.id, reason, caseId, guild.id, length);
-    //Do the action
-    if (doAction) {
-        var guildUser = await guild.members.fetch(user.id);
-        doNormalAction(type, guildUser, reason, length);
-    }
     //Console log
     var logMessage = `${user.tag} was ${typeMsg} ${guild.name} by ${moderator.tag} with the reason "${reason}"`;
     if (length != -1) logMessage += ` for ${length}`;
     Console.log(logMessage, guild.id);
     //Channel stuff
-    if (tempChannel) tempChannel.send({embeds: [new EmbedBuilder().setColor(CommandManager.neutralColor).setDescription(`${type} of ${user.tag} successful`)]});
+    if (tempChannel) tempChannel.reply({embeds: [new EmbedBuilder().setColor(CommandManager.neutralColor).setDescription(`${type} of ${user.tag} successful`)], ephemeral: true});
     var channelId = StorageManager.get('modLogChannel', guild.id);
     if (!channelId) {
         Console.log(`No log channel set, and temp channel is null`, guild.id);
@@ -74,17 +69,23 @@ async function modLog(type, /** @type {Discord.User} */ user, /** @type {Discord
                 inline: true,
             },
         ]);
-    else dmEmbed.addFields(['Reason', `${reason}`, false]);
+    else dmEmbed.addFields([{name: 'Reason', value: `${reason}`, inline: false}]);
     await user
         .send({embeds: [dmEmbed]})
         .then(() => {
-            logEmbed.addFields(['DM Status', 'Succesful', true]);
+            logEmbed.addFields([{name: 'DM Status', value: 'Succesful', inline: true}]);
         })
         .catch(() => {
-            logEmbed.addFields(['DM Status', 'Failed', true]);
+            logEmbed.addFields([{name: 'DM Status', value: 'Failed', inline: true}]);
         });
     //Rest of log
-    logEmbed.addFields(['Reason', `${reason}`, true]);
+    logEmbed.addFields([{name: 'Reason', value: `${reason}`, inline: true}]);
+    //Do the action
+    if (doAction) {
+        var guildUser = await guild.members.fetch(user.id);
+        doNormalAction(type, guildUser, reason, length);
+    }
+    //Send log
     channel.send({embeds: [logEmbed]});
 }
 //Save mod action
@@ -146,7 +147,7 @@ async function doUndoAction(type, userId, username, moderator, reason, tempChann
     var logMessage = `${username} was ${typeMsg} ${guild.name} by ${moderator.username} with the reason "${reason}"`;
     Console.log(logMessage, guild.id);
     //Channel stuff
-    if (tempChannel) tempChannel.send({embeds: [new EmbedBuilder().setColor(CommandManager.neutralColor).setDescription(`${type} of ${user.tag} successful`)]});
+    if (tempChannel) tempChannel.reply({embeds: [new EmbedBuilder().setColor(CommandManager.neutralColor).setDescription(`${typeMsg} of ${username} successful`)], ephemeral: true});
     var channelId = StorageManager.get('modLogChannel', guild.id);
     if (!channelId) {
         Console.log(`No log channel set, and temp channel is null`, guild.id);

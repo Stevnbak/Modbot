@@ -1,5 +1,5 @@
 //@ts-check
-const {EmbedBuilder, PermissionsBitField, ChannelType} = require('discord.js');
+const {EmbedBuilder, PermissionsBitField, ChannelType, ApplicationCommandType, ApplicationCommandOptionType, CommandInteraction} = require('discord.js');
 /**
  * @typedef {"Uncategorized Commands"|"Misc"|"Botowner Commands"|"Moderation"|"Information"} CommandCategory
  *
@@ -9,14 +9,14 @@ const {EmbedBuilder, PermissionsBitField, ChannelType} = require('discord.js');
  * @typedef CommandOptions
  * @property {string} description | Description of the command.
  * @property {CommandCategory} category | Category of the command.
- * @property {boolean} botowner | Whether to make this command only usable by botowners.
- * @property {boolean} mod | Whether to make this command only usable by moderators.
- * @property {boolean} admin | Whether to make this command only usable by user with admin permmission.
+ * @property {ApplicationCommandOptionType[]} options | Interaction options of the command.
+ * @property {ApplicationCommandType} type | The interaction type.
+ * @property {PermissionsBitField} permissions | The permissions bit field needed to use this command.
  */
 /**
  * @typedef CommandExtras
  * @property {string} cmd The command that can triggers this callback.
- * @property {(message: import('discord.js').Message, String) => void} cb Callback to call once this command is triggered.
+ * @property {(CommandInteraction) => void} cb Callback to call once this command is triggered.
  *
  * @typedef {CommandExtras & CommandOptions} Command
  */
@@ -28,26 +28,19 @@ class CommandManager {
      *
      * @param {import('discord.js').Client} Client Discord.JS client
      * @param {typeof Bot.StorageManager} StorageManager The storage manager for the bot.
-     * @param {string[]} botowners Bot
+     * @param {any} token The bot token.
+     * @param {typeof Bot.Console} Console The Console for the bot.
      */
-    constructor({on}, StorageManager, botowners, Console) {
+    // @ts-ignore
+    constructor({on}, StorageManager, token, Console) {
         /**
          * Array of all the commands.
          * @type {Command[]}
          */
         this.commands = [];
 
-        /**
-         * Array of all botowners.
-         * @type {ReadonlyArray<string>}
-         */
-        this.botowners = botowners;
-
-        /**
-         * Prefix of the bot.
-         * @type {string}
-         */
-        this.prefix = '?';
+        //Array of all the commands.
+        this.applications = [];
 
         //Colours
         this.successColor = 0x239400;
@@ -59,11 +52,10 @@ class CommandManager {
          * @param {string} cmd The command that can trigger this callback.
          * @param {Partial<CommandOptions>} options Options of the command.
          * @property {string} description | Description of the command.
+         * @property {ApplicationCommandOptionType[]} options | Interaction options of the command.
          * @property {CommandCategory} category | Category of the command.
-         * @property {boolean} botowner | Whether to make this command only usable by botowners.
-         * @property {boolean} mod | Whether to make this command only usable by moderators.
-         * @property {boolean} admin | Whether to make this command only usable by user with admin permmission.
-         * @property {(import('discord.js').Message, String) => void} cb Callback to call once the command is activated.
+         * @property {PermissionsBitField} permissions | The permissions bit field needed to use this command.
+         * @param {(CommandInteraction) => void} cb Callback to call once the command is activated.
          */
 
         this.add = (cmd, options, cb) => {
@@ -71,40 +63,63 @@ class CommandManager {
             const data = Object.assign(
                 {
                     cb,
-                    cmd: cmd.toLowerCase(),
+                    cmd: cmd,
                     category: 'Uncategorized Commands',
+                    options: [],
                     description: 'No description provided.',
-                    botowner: false,
-                    mod: false,
-                    admin: false,
+                    type: ApplicationCommandType.ChatInput,
+                    permissions: PermissionsBitField.Flags.ViewChannel,
                 },
                 options
             );
+            const interaction = {
+                name: cmd,
+                type: data.type,
+                default_member_permissions: data.permissions.toString(),
+            };
+            if (data.options.length > 0) {
+                interaction.options = data.options;
+            }
+            if (data.type == ApplicationCommandType.ChatInput) {
+                interaction['description'] = data.description;
+                interaction['name'] = cmd.toLowerCase();
+                data.cmd = cmd.toLowerCase();
+            }
+            this.applications.push(interaction);
             this.commands.push(data);
         };
-        //Activate text commands.
-        on('messageCreate', async (msg) => {
-            //Filter out dms, other bots and no prefix...
-            if (msg.channel.type === ChannelType.DM || !msg.content.startsWith(this.prefix) || msg.author.bot || msg.guild == null) return;
-            const cmd = msg.content.split(' ')[0].slice(this.prefix.length).toLowerCase();
+
+        this.setup = async () => {
+            const {REST, Routes} = require('discord.js');
+            const config = require('./config.json');
+
+            const rest = new REST({version: '10'}).setToken(token);
+
+            try {
+                await rest.put(Routes.applicationCommands(config.CLIENT_ID), {body: this.applications});
+                Console.log('Reloaded application commands.');
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        //Activate applications.
+        on('interactionCreate', async (interaction) => {
+            //Filter out dms, other bots...
+            if (interaction.guild == null || interaction.user.bot) return;
+            //Filter out non slash commands.
+            if (!interaction.isChatInputCommand() && !interaction.isUserContextMenuCommand() && !interaction.isMessageContextMenuCommand()) return;
+            //Find command.
             for (const command of this.commands) {
-                if (command.cmd.startsWith(cmd)) {
+                if (command.cmd == interaction.commandName) {
                     //Check if bot has the needed permissions
-                    if (!checkBotPermissions(msg.channel, msg.guild, command.mod)) {
-                        Console.error('Bot permission error in guild with id: ' + msg.guild.id);
+                    if (!checkBotPermissions(interaction.channel, interaction.guild)) {
+                        Console.error('Bot permission error in guild with id: ' + interaction.guild.id);
                         return;
                     }
-                    //Check mod status of user
-                    if (command.mod) if (!checkModStatus(msg.member, msg.guild, StorageManager) && !checkAdminStatus(msg.member, msg.guild)) return;
-                    //Check admin status of user
-                    if (command.admin) if (!checkAdminStatus(msg.member, msg.guild)) return;
-                    //Check botowner status of user
-                    if (command.botowner) if (!this.botowners.includes(msg.author.id)) return;
                     //Run command call back
                     try {
-                        var split = msg.content.split(' ');
-                        var content = msg.content.replace(split[0], '').replace(' ', '');
-                        command.cb(msg, content);
+                        command.cb(interaction);
                     } catch {
                         async (error) => {
                             if ((error.name === 'DiscordAPIError' && !(error.path.endsWith('/messages') && error.code === 50013)) || error.name !== 'DiscordAPIError') {
@@ -112,49 +127,35 @@ class CommandManager {
                                 Console.error(`Error while executing command "${command.cmd[0]}"`);
                                 Console.error(error.stack);
                                 try {
-                                    await msg.channel.send({
+                                    await interaction.reply({
                                         embeds: [new EmbedBuilder().setDescription('An error has occurred while running this command! It has been reported to the developer!').setColor(0xff0000)],
                                     });
                                 } catch (_) {}
                             }
-                            Console.log(error);
+                            Console.error(error);
                         };
                     }
                 }
             }
         });
+
+        //Done loading.
         Console.log('Commandmanager is ready', null);
     }
 }
-function checkModStatus(member, guild, Storage) {
-    var userRoles = member.roles.cache;
-    var modRoles = Storage.get('modRoles', guild.id) ? Storage.get('modRoles', guild.id) : [];
-    var found = false;
-    userRoles.forEach((role) => {
-        if (modRoles.includes(role.id)) found = true;
-    });
-    return found;
-}
 
-function checkAdminStatus(member, guild) {
-    if (member.permissions.has(PermissionsBitField.Flags.Administrator, true)) return true;
-    return false;
-}
-
-async function checkBotPermissions(channel, /** @type {import('discord.js').Guild} */ guild, mod) {
+async function checkBotPermissions(channel, /** @type {import('discord.js').Guild} */ guild) {
     var neededPermissions = [
         PermissionsBitField.Flags.ViewAuditLog,
         PermissionsBitField.Flags.ViewChannel,
         PermissionsBitField.Flags.SendMessages,
-        PermissionsBitField.Flags.SendMessagesInThreads,
         PermissionsBitField.Flags.EmbedLinks,
         PermissionsBitField.Flags.AttachFiles,
-        PermissionsBitField.Flags.ReadMessageHistory,
         PermissionsBitField.Flags.AddReactions,
+        PermissionsBitField.Flags.BanMembers,
+        PermissionsBitField.Flags.KickMembers,
+        PermissionsBitField.Flags.ModerateMembers,
     ];
-    if (mod) {
-        neededPermissions.concat([PermissionsBitField.Flags.ManageChannels, PermissionsBitField.Flags.BanMembers, PermissionsBitField.Flags.KickMembers, PermissionsBitField.Flags.ModerateMembers]);
-    }
     let me = await guild.members.fetch(guild.client.user.id);
     if (me.permissionsIn(channel).has(neededPermissions)) return true;
     return false;

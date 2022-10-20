@@ -21,17 +21,17 @@ const TOKEN = CONFIG.TESTTOKEN;
 //Creating the client.
 const Client = new Discord.Client({
     disabledEvents: ['TYPING_START', 'TYPING_STOP', 'CHANNEL_PINS_UPDATE', 'USER_SETTINGS_UPDATE'],
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildIntegrations],
 });
 
 const Console = new C(Client);
 Console.log('Console is ready', null);
-Client.on('ready', () => {
+Client.on('ready', async () => {
     const ExportManager = new EM();
     ExportManager.export('config', CONFIG);
     const BotListeners = new LM(Client);
     const StorageManager = new SM(Client, Console);
-    const CommandManager = new CM(BotListeners, StorageManager, CONFIG.BOTOWNERS, Console);
+    const CommandManager = new CM(BotListeners, StorageManager, TOKEN, Console);
     const ChatResponder = new CR(BotListeners, StorageManager, Console);
     global.Bot = {
         Client,
@@ -51,6 +51,10 @@ Client.on('ready', () => {
     }
     Console.log('Loaded all addons', null);
 
+    //Load applications
+    await CommandManager.setup();
+
+    //Ready
     Console.log('Bot is up and running', null);
 });
 //Logging in.
