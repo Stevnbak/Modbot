@@ -346,6 +346,10 @@ CommandManager.add(
                 });
                 var roleString = `${roles.join(' ')} `;
                 if (roles.length == 0) roleString = 'None';
+                //Infraction count:
+                var modlogs = StorageManager.get('modLog', interaction.guild.id) ? StorageManager.get('modLog', interaction.guild.id) : {};
+                var currentLogs = modlogs[memberId] ? modlogs[memberId] : {};
+                //Embed:
                 var msgEmbed = new EmbedBuilder()
                     .setColor(CommandManager.neutralColor)
                     .setThumbnail(member.user.avatarURL())
@@ -355,15 +359,19 @@ CommandManager.add(
                     .setTimestamp()
                     .addFields([
                         {name: 'Joined', value: `<t:${Math.round(member.joinedTimestamp / 1000)}> `, inline: true},
+                        {name: '\u200b', value: '\u200b', inline: true},
                         {name: 'Registered', value: `<t:${Math.round(member.user.createdTimestamp / 1000)}> `, inline: true},
-                        {name: 'Roles', value: roleString},
+                        {name: 'Roles', value: roleString, inline: true},
+                        {name: '\u200b', value: '\u200b', inline: true},
+                        {name: 'Infractions', value: Object.keys(currentLogs).length + ` `, inline: true},
                     ]);
                 interaction.reply({embeds: [msgEmbed]});
                 Console.log(`Showed user information for ${member.user.tag}`, interaction.guild.id);
             })
-            .catch(() => {
+            .catch((error) => {
                 var msgEmbed = new EmbedBuilder().setColor(CommandManager.failColor).setDescription(`Couldn't find user with id ${memberId}`);
                 interaction.reply({embeds: [msgEmbed]});
+                console.error(error);
                 Console.log(`Couldn't find user with id: "${memberId}"`, interaction.guild.id);
             });
     }

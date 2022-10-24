@@ -45,7 +45,7 @@ class CommandManager {
         //Colours
         this.successColor = 0x239400;
         this.failColor = 0x910f00;
-        this.neutralColor = 0x013370;
+        this.neutralColor = 0x6e757d;
 
         /**
          * Adds a command to be usable.
