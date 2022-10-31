@@ -6,7 +6,9 @@ class StorageManager {
     constructor(Client, Console) {
         var path = Path.join(__dirname, 'database/');
 
+        Client.guilds.fetch();
         const Guilds = Client.guilds.cache;
+        console.log(Guilds);
         Guilds.forEach((guild) => {
             if (!fs.existsSync(`${path}${guild.id}.json`)) {
                 fs.writeFile(`${path}${guild.id}.json`, '{}', () => {});

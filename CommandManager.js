@@ -97,7 +97,7 @@ class CommandManager {
             const rest = new REST({version: '10'}).setToken(token);
 
             try {
-                await rest.put(Routes.applicationCommands(config.TEST_CLIENT_ID), {body: this.applications});
+                await rest.put(Routes.applicationCommands(config.CLIENT_ID), {body: this.applications});
                 Console.log('Reloaded application commands.');
             } catch (error) {
                 console.error(error);
