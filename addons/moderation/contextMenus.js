@@ -4,7 +4,14 @@ const modActions = require('./actions');
 const modFunctions = require('./functions');
 
 /* User context menus */
-CommandManager.add('Kick', {category: 'Moderation', description: 'Kick a user from the server', type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.KickMembers}, async (interaction) => {
+CommandManager.add(
+    'Kick', 
+    {
+        category: 'Moderation Action', 
+        description: 'Kick a user from the server', 
+        type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.KickMembers
+    }, 
+    async (interaction) => {
     const targetMember = interaction.targetMember;
     // Create the modal
     const modal = new ModalBuilder().setCustomId('kickModal-' + targetMember.user.id).setTitle('Kick ' + targetMember.user.tag);
@@ -14,7 +21,13 @@ CommandManager.add('Kick', {category: 'Moderation', description: 'Kick a user fr
     //show modal
     await interaction.showModal(modal);
 });
-CommandManager.add('Ban', {category: 'Moderation', description: 'Ban a user from the server', type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.BanMembers}, async (interaction) => {
+CommandManager.add(
+    'Ban', {
+        category: 'Moderation Action', 
+        description: 'Ban a user from the server', 
+        type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.BanMembers
+    }, 
+    async (interaction) => {
     const targetMember = interaction.targetMember;
     // Create the modal
     const modal = new ModalBuilder().setCustomId('banModal-' + targetMember.user.id).setTitle('Ban ' + targetMember.user.tag);
@@ -24,7 +37,15 @@ CommandManager.add('Ban', {category: 'Moderation', description: 'Ban a user from
     //show modal
     await interaction.showModal(modal);
 });
-CommandManager.add('Warn', {category: 'Moderation', description: 'Warn a user', type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.ModerateMembers}, async (interaction) => {
+CommandManager.add(
+    'Warn', 
+    {
+        category: 'Moderation Action', 
+        description: 'Give a formal warning to a user', 
+        type: ApplicationCommandType.User, 
+        permissions: PermissionsBitField.Flags.ModerateMembers
+    }, 
+    async (interaction) => {
     const targetMember = interaction.targetMember;
     // Create the modal
     const modal = new ModalBuilder().setCustomId('warnModal-' + targetMember.user.id).setTitle('Warn ' + targetMember.user.tag);
@@ -35,8 +56,13 @@ CommandManager.add('Warn', {category: 'Moderation', description: 'Warn a user', 
     await interaction.showModal(modal);
 });
 CommandManager.add(
-    'Who is',
-    {category: 'Moderation', description: 'Get user information', type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers},
+    'User Info',
+    {
+        category: 'Moderation Info', 
+        description: 'Get information about user', 
+        type: ApplicationCommandType.User, 
+        permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers
+    },
     async (interaction) => {
         const member = interaction.targetMember;
         var roles = [];
@@ -70,7 +96,12 @@ CommandManager.add(
 );
 CommandManager.add(
     'Mod logs',
-    {category: 'Moderation', description: 'Get user information', type: ApplicationCommandType.User, permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers},
+    {
+        category: 'Moderation Info', 
+        description: 'Show moderation logs for a user', 
+        type: ApplicationCommandType.User, 
+        permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers
+    },
     async (/** @type {import('discord.js').ChatInputCommandInteraction} */ interaction) => {
         var modlogs = StorageManager.get('modLog', interaction.guild.id) ? StorageManager.get('modLog', interaction.guild.id) : {};
         var userId = interaction.targetMember.id;

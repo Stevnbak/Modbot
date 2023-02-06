@@ -5,7 +5,7 @@ const functions = require('./setup');
 CommandManager.add(
     'channel',
     {
-        description: 'Set log channel',
+        description: 'Set the general or moderation log channel',
         category: 'Settings',
         permissions: PermissionsBitField.Flags.Administrator,
         type: ApplicationCommandType.ChatInput,

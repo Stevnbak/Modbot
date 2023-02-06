@@ -27,12 +27,13 @@ const Client = new Discord.Client({
 
 const Console = new C(Client);
 Console.log('Console is ready', null);
+
 Client.on('ready', async () => {
     const ExportManager = new EM();
     ExportManager.export('config', CONFIG);
     const BotListeners = new LM(Client);
     const StorageManager = new SM(Client, Console);
-    const CommandManager = new CM(BotListeners, StorageManager, TOKEN, Console);
+    const CommandManager = new CM(Client, StorageManager, Console);
     const ChatResponder = new CR(BotListeners, StorageManager, Console);
     global.Bot = {
         Client,
@@ -52,7 +53,7 @@ Client.on('ready', async () => {
     }
     Console.log('Loaded all addons', null);
 
-    //Load applications
+    //Refresh applications
     await CommandManager.setup();
 
     //Ready

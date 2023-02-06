@@ -48,8 +48,8 @@ async function updateSlowmode(channel) {
 CommandManager.add(
     'slowmode',
     {
-        description: 'Change settings related to the auto slowmode',
-        category: 'Misc',
+        description: 'Change all settings in relation to auto slowmode',
+        category: 'Misceleaneous',
         options: [
             {
                 name: 'set',

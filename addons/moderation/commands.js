@@ -6,8 +6,8 @@ const modActions = require('./actions');
 CommandManager.add(
     'kick',
     {
-        description: 'Kick member',
-        category: 'Moderation',
+        description: 'Kick a user from the server',
+        category: 'Moderation Action',
         options: [
             {name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User},
             {name: 'reason', description: 'Reason behind the kick', autocomplete: true, type: ApplicationCommandOptionType.String},
@@ -34,8 +34,8 @@ CommandManager.add(
 CommandManager.add(
     'ban',
     {
-        description: 'Ban member',
-        category: 'Moderation',
+        description: 'Ban a user from the server',
+        category: 'Moderation Action',
         options: [
             {name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User},
             {name: 'reason', description: 'Reason behind the ban', autocomplete: true, type: ApplicationCommandOptionType.String},
@@ -65,13 +65,14 @@ CommandManager.add(
 CommandManager.add(
     'mute',
     {
-        description: 'Mute member',
-        category: 'Moderation',
+        description: 'Mute a user for a certain amount of time',
+        category: 'Moderation Action',
         options: [
             {name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User},
             {name: 'length', description: 'Length of the mute', required: true, type: ApplicationCommandOptionType.String},
             {name: 'reason', description: 'Reason behind the mute', autocomplete: true, type: ApplicationCommandOptionType.String},
         ],
+        aliases: ["timeout"],
         permissions: PermissionsBitField.Flags.ModerateMembers,
         type: ApplicationCommandType.ChatInput,
     },
@@ -95,8 +96,8 @@ CommandManager.add(
 CommandManager.add(
     'warn',
     {
-        description: 'Warn member',
-        category: 'Moderation',
+        description: 'Give a formal warning to a user',
+        category: 'Moderation Action',
         options: [
             {name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User},
             {name: 'reason', description: 'Reason behind the warn', autocomplete: true, type: ApplicationCommandOptionType.String},
@@ -123,8 +124,8 @@ CommandManager.add(
 CommandManager.add(
     'unban',
     {
-        description: 'Unban member',
-        category: 'Moderation',
+        description: 'Remove a ban from a user',
+        category: 'Moderation Action',
         options: [
             {name: 'user-id', description: 'User to look up', required: true, type: ApplicationCommandOptionType.String},
             {name: 'reason', description: 'Reason behind the unban', autocomplete: true, type: ApplicationCommandOptionType.String},
@@ -152,8 +153,8 @@ CommandManager.add(
 CommandManager.add(
     'unmute',
     {
-        description: 'Unmute member',
-        category: 'Moderation',
+        description: 'Remove a mute from a user',
+        category: 'Moderation Action',
         options: [
             {name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User},
             {name: 'reason', description: 'Reason behind the unmute', autocomplete: true, type: ApplicationCommandOptionType.String},
@@ -181,7 +182,7 @@ CommandManager.add(
     'duration',
     {
         description: 'Change duration of a mute or ban',
-        category: 'Moderation',
+        category: 'Moderation Action',
         options: [
             {name: 'case-id', description: 'Case Id of moderation action', required: true, type: ApplicationCommandOptionType.Number},
             {name: 'length', description: 'New length of the mute or ban', required: true, type: ApplicationCommandOptionType.String},
@@ -259,9 +260,10 @@ CommandManager.add(
 CommandManager.add(
     'modlogs',
     {
-        description: 'Show modlogs for member',
-        category: 'Moderation',
+        description: 'Show moderation logs for a user',
+        category: 'Moderation Info',
         options: [{name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User}],
+        aliases: ["logs"],
         permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers,
         type: ApplicationCommandType.ChatInput,
     },
@@ -311,7 +313,13 @@ Date: <t:${Math.round(current['date'] / 1000)}>` + ' ',
 //Active moderations
 CommandManager.add(
     'moderations',
-    {description: 'Show all active moderations', category: 'Moderation', permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers, type: ApplicationCommandType.ChatInput},
+    {
+        description: 'Show all currently active punishments', 
+        category: 'Moderation Info',
+        permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers, 
+        type: ApplicationCommandType.ChatInput,
+        aliases: ["active"],
+    },
     (/** @type {import('discord.js').ChatInputCommandInteraction} */ interaction) => {
         var active = StorageManager.get('activeMod', interaction.guild.id) ? StorageManager.get('activeMod', interaction.guild.id) : {};
         var msgEmbed = new EmbedBuilder()
@@ -327,11 +335,12 @@ CommandManager.add(
 );
 //Who is command
 CommandManager.add(
-    'whois',
+    'info',
     {
-        description: 'Show user information about user',
-        category: 'Moderation',
+        description: 'Get information about user',
+        category: 'Moderation Info',
         options: [{name: 'user', description: 'User to look up', required: true, type: ApplicationCommandOptionType.User}],
+        aliases: ["whois", "who", "userinfo"],
         permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers,
         type: ApplicationCommandType.ChatInput,
     },
@@ -380,9 +389,10 @@ CommandManager.add(
 CommandManager.add(
     'modstats',
     {
-        description: 'Show modlogs for member',
-        category: 'Moderation',
+        description: 'Get moderation stats for moderator',
+        category: 'Moderation Info',
         options: [{name: 'moderator', description: 'Moderator to look up stats for', type: ApplicationCommandOptionType.User}],
+        aliases: ["statistics"],
         permissions: PermissionsBitField.Flags.ModerateMembers | PermissionsBitField.Flags.KickMembers | PermissionsBitField.Flags.BanMembers,
         type: ApplicationCommandType.ChatInput,
     },
